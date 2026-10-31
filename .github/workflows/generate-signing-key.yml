@@ -1,0 +1,41 @@
+name: Generate Android signing key (run once)
+
+# Creates a new release keystore and offers it as a short-lived private artifact.
+# Download it, add the two values as repository secrets, then delete the artifact.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Create keystore
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p out
+          PASS=$(openssl rand -base64 24 | tr -dc 'A-Za-z0-9' | head -c 24)
+          keytool -genkeypair -noprompt -keystore out/release.keystore -alias healthmonitor \
+            -storepass "$PASS" -keypass "$PASS" -keyalg RSA -keysize 2048 -validity 20000 \
+            -dname "CN=Health Recovery, O=SplinteredApex"
+          base64 -w0 out/release.keystore > out/ANDROID_KEYSTORE_BASE64.txt
+          printf '%s' "$PASS" > out/ANDROID_KEYSTORE_PASSWORD.txt
+          cat > out/README.txt <<'TXT'
+          1. In GitHub: health-monitor > Settings > Secrets and variables > Actions > New repository secret.
+          2. Name ANDROID_KEYSTORE_BASE64  -> paste the contents of ANDROID_KEYSTORE_BASE64.txt
+          3. Name ANDROID_KEYSTORE_PASSWORD -> paste the contents of ANDROID_KEYSTORE_PASSWORD.txt
+          4. Keep release.keystore + the password somewhere safe (e.g. a password manager).
+          5. Delete this artifact from the workflow run page.
+          TXT
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-signing-key
+          path: out/
+          retention-days: 1

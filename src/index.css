@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --surface-2: #eef2f6;
+  --text: #0f1b2d;
+  --muted: #4a5868;
+  --border: #d5dde6;
+  --navy: #0f2340;
+  --primary: #1d6f69;        /* muted teal, 5.6:1 on white */
+  --primary-strong: #145a55;
+  --on-primary: #ffffff;
+  --ok: #1e6b3d;
+  --ok-bg: #e6f3eb;
+  --warn: #8a5200;
+  --warn-bg: #fdf1dc;
+  --danger: #a3221b;
+  --danger-bg: #fbe7e5;
+  --info: #1f4f86;
+  --info-bg: #e5eef8;
+  --focus: #1f6feb;
+  --chart-1: #1f4f86;
+  --chart-2: #1d8a82;
+  --chart-3: #8a5200;
+  --chart-grid: #e1e7ee;
+  color-scheme: light;
+}
+.dark {
+  --bg: #0b1422;
+  --surface: #121f33;
+  --surface-2: #1a2a42;
+  --text: #e8eef6;
+  --muted: #a9b6c6;
+  --border: #2a3c57;
+  --navy: #0b1422;
+  --primary: #5fb3ad;
+  --primary-strong: #7cc6c0;
+  --on-primary: #06201e;
+  --ok: #7fd3a0;
+  --ok-bg: #12301f;
+  --warn: #f2c06b;
+  --warn-bg: #3a2b10;
+  --danger: #ff9b93;
+  --danger-bg: #3d1614;
+  --info: #9cc3f0;
+  --info-bg: #142a45;
+  --focus: #8ab4ff;
+  --chart-1: #9cc3f0;
+  --chart-2: #5fb3ad;
+  --chart-3: #f2c06b;
+  --chart-grid: #233650;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-navy: var(--navy);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-on-primary: var(--on-primary);
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+html, body, #root { min-height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.tabular { font-variant-numeric: tabular-nums; }
+.safe-bottom { padding-bottom: calc(env(safe-area-inset-bottom) + 0.25rem); }
+.safe-top { padding-top: env(safe-area-inset-top); }
+.sr-only-focusable:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+dialog::backdrop { background: rgb(5 12 24 / 0.55); }
+dialog { color: var(--text); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+.recharts-wrapper text { fill: var(--muted); }
+.recharts-cartesian-grid line { stroke: var(--chart-grid); }
+.recharts-tooltip-wrapper .recharts-default-tooltip { background: var(--surface) !important; border-color: var(--border) !important; color: var(--text); border-radius: 10px; }

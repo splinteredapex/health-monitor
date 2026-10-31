@@ -1,0 +1,12 @@
+node_modules
+dist
+dev-dist
+coverage
+playwright-report
+test-results
+*.local
+.DS_Store
+
+# Signing keys are provided by CI secrets, never committed
+*.keystore
+*.jks

@@ -1,0 +1,114 @@
+name: CI and Android build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Typecheck, lint, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=moderate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+          retention-days: 14
+
+  android:
+    name: Android APK
+    needs: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - run: npm ci
+      - run: npm run build
+      - run: npx cap sync android
+      - name: Restore signing key
+        id: key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/release.keystore"
+            echo "path=$RUNNER_TEMP/release.keystore" >> "$GITHUB_OUTPUT"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::ANDROID_KEYSTORE_BASE64 secret not set – building a debug-signed APK. Installing a later build over it will require uninstalling (which deletes app data)."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Build APK
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+          ANDROID_KEYSTORE_PATH: ${{ steps.key.outputs.path }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          if [ "${{ steps.key.outputs.signed }}" = "true" ]; then
+            ./gradlew --no-daemon assembleRelease
+            cp app/build/outputs/apk/release/app-release.apk ../health-recovery-${{ github.run_number }}.apk
+          else
+            ./gradlew --no-daemon assembleDebug
+            cp app/build/outputs/apk/debug/app-debug.apk ../health-recovery-${{ github.run_number }}-debug.apk
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: health-recovery-apk
+          path: health-recovery-${{ github.run_number }}*.apk
+          retention-days: 30
+
+  release:
+    name: Publish APK to Releases
+    needs: android
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: health-recovery-apk
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: build-${{ github.run_number }}
+          name: Health Recovery build ${{ github.run_number }}
+          body: |
+            Android build from ${{ github.sha }}.
+            Install: open this page on your phone, download the .apk, allow "Install unknown apps" for your browser, and install.
+            Signed builds (no "-debug" in the file name) install over each other and keep your data.
+            A "-debug" build is signed with a temporary key: don't install it over a signed build.
+          files: health-recovery-${{ github.run_number }}*.apk
+          make_latest: true

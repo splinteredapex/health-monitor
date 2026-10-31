@@ -188,10 +188,7 @@ class HealthConnectPlugin : Plugin() {
         return out
     }
 
-    private fun JSObject.putOpt(key: String, value: Any?): JSObject {
-        if (value != null) put(key, value)
-        return this
-    }
+    // Note: JSONObject.putOpt (used below) skips null values.
 
     private suspend fun readBloodPressure(start: Instant, end: Instant): JSArray {
         val arr = JSArray()

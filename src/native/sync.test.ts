@@ -28,7 +28,7 @@ beforeEach(async () => {
   db.close();
   await Dexie.delete(DB_NAME);
   await db.open();
-  await completeOnboarding({ sex: 'male', heightCm: 185.4, baselineWeightKg: 86, programmeStartDate: '2026-11-02', theme: 'system', reminders: DEFAULT_REMINDERS, dateOfBirth: '1987-05-01' }, {});
+  await completeOnboarding({ sex: 'male', heightCm: 178, baselineWeightKg: 80, programmeStartDate: '2026-11-02', theme: 'system', reminders: DEFAULT_REMINDERS, dateOfBirth: '1990-05-01' }, {});
 });
 
 describe('Health Connect sync', () => {
@@ -44,7 +44,7 @@ describe('Health Connect sync', () => {
     expect((await db.sleep.where('wakeDate').equals('2026-11-04').first())!.source).toBe('manual');
     const d4 = (await db.dailyMetrics.where('localDate').equals('2026-11-04').first())!;
     expect(d4).toMatchObject({ restingHr: 55, steps: 7000 });
-    expect((await db.exercise.toArray())[0]).toMatchObject({ intensity: 'moderate', source: 'watch' }); // 120 / 181 = 66% of HRmax
+    expect((await db.exercise.toArray())[0]).toMatchObject({ intensity: 'moderate', source: 'watch' }); // 120 / 184 = 65% of HRmax
 
     const r2 = await syncHealthConnect(new Date('2026-11-05T13:00:00Z'));
     expect(r2.added).toMatchObject({ bloodPressure: 0, weights: 0, exercise: 0, sleep: 0 });

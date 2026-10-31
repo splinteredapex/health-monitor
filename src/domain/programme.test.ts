@@ -120,7 +120,7 @@ describe('adherence', () => {
 describe('weekly summary', () => {
   it('is factual and flags unrecorded alcohol days', () => {
     const today = addDays(START, 6);
-    const profile = { id: 'profile' as const, createdAt: 0, updatedAt: 0, sex: 'male' as const, heightCm: 185.4, baselineWeightKg: 86, programmeStartDate: START, theme: 'system' as const, reminders: DEFAULT_REMINDERS };
+    const profile = { id: 'profile' as const, createdAt: 0, updatedAt: 0, sex: 'male' as const, heightCm: 178, baselineWeightKg: 80, programmeStartDate: START, theme: 'system' as const, reminders: DEFAULT_REMINDERS };
     const data = {
       ...empty,
       bp: Array.from({ length: 7 }, (_, i) => protocolDay(addDays(START, i), 138, 86)).flat(),

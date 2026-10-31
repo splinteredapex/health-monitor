@@ -8,11 +8,11 @@ import { csvCell, toCsv, parseCsv } from './csv';
 
 describe('body calculations', () => {
   it('BMI uses kg / m²', () => {
-    expect(bmi(86, 185.4)).toBe(25.0);
+    expect(bmi(80, 178)).toBe(25.2);
     expect(bmi(70, 175)).toBe(22.9);
   });
   it('waist-to-height ratio', () => {
-    expect(waistToHeight(92, 185.4)).toBe(0.5);
+    expect(waistToHeight(89, 178)).toBe(0.5);
     expect(waistToHeight(80, 160)).toBe(0.5);
   });
   it('rejects non-positive input', () => {
@@ -66,8 +66,8 @@ describe('dates', () => {
     expect(toLocalDate(new Date(Date.UTC(2026, 5, 30, 23, 30)))).toBe('2026-07-01');
   });
   it('age', () => {
-    expect(ageOn('1987-11-01', '2026-10-31')).toBe(38);
-    expect(ageOn('1987-10-31', '2026-10-31')).toBe(39);
+    expect(ageOn('1990-11-01', '2026-10-31')).toBe(35);
+    expect(ageOn('1990-10-31', '2026-10-31')).toBe(36);
   });
 });
 

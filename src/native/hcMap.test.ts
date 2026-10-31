@@ -23,15 +23,15 @@ describe('Health Connect mapping', () => {
     expect(s).toMatchObject({ wakeDate: '2026-11-03', bedLocal: '2026-11-02T23:05', durationMin: 465, deepMin: 60, remMin: 90 });
   });
   it('never assumes moderate intensity without heart rate', () => {
-    expect(intensityFromHr(null, 39)).toEqual({ intensity: 'easy', estimated: false });
-    expect(intensityFromHr(110, 39).intensity).toBe('easy'); // 61% of 181
-    expect(intensityFromHr(125, 39).intensity).toBe('moderate'); // 69%
-    expect(intensityFromHr(150, 39).intensity).toBe('hard'); // 83%
-    const e = mapExercise({ id: 'e', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:40:00Z', startZoneOffsetSeconds: 0, category: 'cycling', avgHr: 128, distanceM: 15230 }, 1, 39)!;
+    expect(intensityFromHr(null, 40)).toEqual({ intensity: 'easy', estimated: false });
+    expect(intensityFromHr(110, 40).intensity).toBe('easy'); // 61% of 180
+    expect(intensityFromHr(125, 40).intensity).toBe('moderate'); // 69%
+    expect(intensityFromHr(150, 40).intensity).toBe('hard'); // 83%
+    const e = mapExercise({ id: 'e', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:40:00Z', startZoneOffsetSeconds: 0, category: 'cycling', avgHr: 128, distanceM: 15230 }, 1, 40)!;
     expect(exerciseSchema.safeParse(e).success).toBe(true);
     expect(e).toMatchObject({ type: 'cycling', durationMin: 40, intensity: 'moderate', distanceKm: 15.23, planned: false, avgHeartRate: 128 });
-    expect(mapExercise({ id: 'x', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:00:20Z', category: 'walking' }, 1, 39)).toBeNull();
-    expect(mapExercise({ id: 'y', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:30:00Z', category: 'zumba' }, 1, 39)!.type).toBe('other');
+    expect(mapExercise({ id: 'x', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:00:20Z', category: 'walking' }, 1, 40)).toBeNull();
+    expect(mapExercise({ id: 'y', startTime: '2026-11-03T17:00:00Z', endTime: '2026-11-03T17:30:00Z', category: 'zumba' }, 1, 40)!.type).toBe('other');
   });
   it('daily metrics keep the latest resting HR per day and positive steps', () => {
     const m = mapDaily(

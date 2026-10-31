@@ -6,8 +6,8 @@ import { resolveSleep } from '../domain/sleep';
 
 const START = '2026-11-02';
 const profileInput = {
-  sex: 'male' as const, heightCm: 185.4, baselineWeightKg: 86, baselineSystolic: 140, baselineDiastolic: 87,
-  programmeStartDate: START, theme: 'system' as const, reminders: DEFAULT_REMINDERS, dateOfBirth: '1987-05-01',
+  sex: 'male' as const, heightCm: 178, baselineWeightKg: 80, baselineSystolic: 138, baselineDiastolic: 88,
+  programmeStartDate: START, theme: 'system' as const, reminders: DEFAULT_REMINDERS, dateOfBirth: '1990-05-01',
 };
 const reading = (over = {}) => ({ takenAt: Date.UTC(2026, 10, 2, 7), tzOffsetMin: 0, localDate: START, localTime: '07:00', period: 'AM' as const, setting: 'home' as const, systolic: 138, diastolic: 88, contexts: [], ...over });
 
@@ -20,7 +20,7 @@ beforeEach(async () => {
 describe('repository', () => {
   it('onboarding seeds profile, goals and the full programme', async () => {
     await completeOnboarding(profileInput, {});
-    expect(await db.userProfile.get('profile')).toMatchObject({ heightCm: 185.4 });
+    expect(await db.userProfile.get('profile')).toMatchObject({ heightCm: 178 });
     expect(await db.programmeWeeks.count()).toBe(13);
     expect(await db.scheduledActivities.count()).toBeGreaterThan(200);
   });

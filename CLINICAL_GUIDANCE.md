@@ -58,7 +58,7 @@ Messages are always shown with an icon and text (never colour alone).
 
 ## Programme assumptions and safeguards
 
-- Built for an adult with historical BP ~140/87 and previous Achilles, knee and proximal hamstring issues.
+- Designed for adults with raised or borderline blood pressure, including people with previous tendon or joint injuries. No personal data is built in: profile values are entered at onboarding.
 - Week 1 includes a GP/practice-nurse review task before increasing activity; strength work starts in week 3 "if medically and injury appropriate".
 - No high-intensity work is prescribed. Every week shows cautions: stop for chest pain, unusual breathlessness, palpitations, dizziness or fainting; don't progress through tendon/joint pain.
 - Skipping is always allowed and never blocks progression.

@@ -13,12 +13,12 @@ export function Onboarding() {
   const [ack, setAck] = useState(false);
   const [sex, setSex] = useState<UserProfile['sex']>('male');
   const [dob, setDob] = useState('');
-  const [height, setHeight] = useState('185.4');
-  const [weight, setWeight] = useState('86');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
   const [waist, setWaist] = useState('');
-  const [sys, setSys] = useState('140');
-  const [dia, setDia] = useState('87');
-  const [injuries, setInjuries] = useState('Previous CrossFit/Hyrox. History of Achilles, knee and proximal hamstring issues.');
+  const [sys, setSys] = useState('');
+  const [dia, setDia] = useState('');
+  const [injuries, setInjuries] = useState('');
   const [start, setStart] = useState(todayLocal());
   const [targetWeight, setTargetWeight] = useState('');
   const [targetWaist, setTargetWaist] = useState('');
@@ -63,7 +63,7 @@ export function Onboarding() {
           ...(opt(sys) != null ? { baselineSystolic: Math.round(opt(sys)!) } : {}),
           ...(opt(dia) != null ? { baselineDiastolic: Math.round(opt(dia)!) } : {}),
           programmeStartDate: start,
-          injuryNotes: injuries,
+          ...(injuries.trim() ? { injuryNotes: injuries.trim() } : {}),
           theme: 'system',
           reminders: DEFAULT_REMINDERS,
           disclaimerAcceptedAt: Date.now(),
@@ -115,7 +115,7 @@ export function Onboarding() {
         <Card title="About you">
           <div className="grid gap-4">
             <Segmented label="Sex" value={sex} onChange={setSex} options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }, { value: 'other', label: 'Other' }, { value: 'unspecified', label: 'Prefer not' }]} />
-            <Field label="Date of birth (optional)" type="date" value={dob} max={todayLocal()} onChange={(e) => setDob(e.target.value)} error={errors.dob} hint="Used to show your age. Initial profile: 39 years." />
+            <Field label="Date of birth (optional)" type="date" value={dob} max={todayLocal()} onChange={(e) => setDob(e.target.value)} error={errors.dob} hint="Used to show your age and estimate exercise intensity from heart rate." />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Height" inputMode="decimal" value={height} onChange={(e) => setHeight(e.target.value)} suffix="cm" error={errors.height} />
               <Field label="Baseline weight" inputMode="decimal" value={weight} onChange={(e) => setWeight(e.target.value)} suffix="kg" error={errors.weight} />
@@ -126,7 +126,7 @@ export function Onboarding() {
               <Field label="Systolic" inputMode="numeric" value={sys} onChange={(e) => setSys(e.target.value)} suffix="mmHg" error={errors.sys} />
               <Field label="Diastolic" inputMode="numeric" value={dia} onChange={(e) => setDia(e.target.value)} suffix="mmHg" error={errors.dia} />
             </fieldset>
-            <TextArea label="Injuries / limitations" value={injuries} onChange={setInjuries} rows={3} hint="Shown alongside exercise tasks as a reminder. The plan never prescribes high-intensity work." />
+            <TextArea label="Injuries / limitations (optional)" value={injuries} onChange={setInjuries} rows={3} hint="e.g. past tendon or joint problems. Shown alongside exercise as a reminder. The plan never prescribes high-intensity work." />
           </div>
         </Card>
       )}
@@ -140,7 +140,12 @@ export function Onboarding() {
               <Field label="Target waist (optional)" inputMode="decimal" value={targetWaist} onChange={(e) => setTargetWaist(e.target.value)} suffix="cm" error={errors.targetWaist} />
             </div>
             <Notice tone="warn" title="Check with your GP first">
-              <p>Your historical readings (around 140/87 mmHg) are at the NICE clinic threshold. Week 1 includes a reminder to book a GP or practice nurse review. Exercise targets build gradually and can be edited at any time.</p>
+              <p>
+                {Number(sys) >= 140 || Number(dia) >= 90
+                  ? `Your typical readings (${sys}/${dia} mmHg) are at or above the NICE clinic threshold of 140/90. `
+                  : ''}
+                Week 1 includes a reminder to book a GP or practice nurse review before increasing activity. Exercise targets build gradually and can be edited at any time.
+              </p>
             </Notice>
           </div>
         </Card>

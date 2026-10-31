@@ -58,7 +58,7 @@ function ExerciseForm({ initial, onSaved, submitLabel }: { initial?: ExerciseSes
         <Field label="Distance (optional)" inputMode="decimal" value={distance} onChange={(e) => setDistance(e.target.value)} suffix="km" error={errors.distance} />
         <Segmented label="Was it planned?" value={planned ? 'y' : 'n'} onChange={(v) => setPlanned(v === 'y')} options={[{ value: 'y', label: 'Planned' }, { value: 'n', label: 'Extra' }]} />
       </div>
-      <TextArea label="Notes (optional)" value={notes} onChange={setNotes} hint="e.g. any Achilles/knee/hamstring symptoms" />
+      <TextArea label="Notes (optional)" value={notes} onChange={setNotes} hint="e.g. any joint, tendon or muscle symptoms" />
       <Button type="submit" size="lg" className="w-full">{submitLabel}</Button>
     </form>
   );

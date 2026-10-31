@@ -14,7 +14,7 @@ export const PROTOCOL_WEEKS = [1, 4, 8, 12];
 
 const STD_CAUTIONS = [
   'Stop and seek medical advice if you get chest pain, unusual breathlessness, palpitations, dizziness or fainting during activity.',
-  'Do not progress through pain in the Achilles, knee or hamstring. Reduce, swap to a pain-free option, or rest – and see a physiotherapist if it persists.',
+  'Do not progress through tendon, joint or muscle pain. Reduce, swap to a pain-free option, or rest – and see a physiotherapist if it persists.',
   'This plan is general guidance, not medical advice. Check with your GP before starting if you have any health concerns or very high readings.',
 ];
 
@@ -91,7 +91,7 @@ const aerobic = (days: number[], min: number, max: number, label: string, option
     title: `${label} ${min}–${max} min`,
     category: 'aerobic' as const,
     instructions:
-      `${label} for ${min}–${max} minutes at a conversational pace (you can talk in full sentences). Brisk walking, easy cycling or swimming are ideal; avoid running or jumping if your Achilles or knee is irritable.`,
+      `${label} for ${min}–${max} minutes at a conversational pace (you can talk in full sentences). Brisk walking, easy cycling or swimming are ideal; avoid running or jumping if any tendon or joint is irritable.`,
     targetMinutes: min,
     optional: optionalDays.includes(day),
     verification: { kind: 'exercise' as const, types: [...AEROBIC], minMinutes: min },
@@ -164,7 +164,7 @@ function week(n: number): WeekSeed {
           ? [
               'Complete a 7-day home BP monitoring period to establish your baseline.',
               'Record baseline weight and waist.',
-              'Book a GP or practice nurse review: historic readings around 140/87 mmHg need professional assessment.',
+              'Book a GP or practice nurse review of your blood pressure before increasing activity.',
               'Start 4 easy aerobic sessions of 20–30 minutes.',
               'Begin an alcohol-free fortnight and reduce salt.',
               'Set a consistent bedtime and wake time.',
@@ -189,7 +189,7 @@ function week(n: number): WeekSeed {
               title: 'Book a GP / practice nurse BP review',
               category: 'medical' as const,
               instructions:
-                'Your historic readings (around 140/87 mmHg) are at or above the NICE clinic threshold. Book a review and bring your home readings. Ask whether you are fit for a gradual exercise increase.',
+                'Book a blood pressure review, especially if previous readings were 140/90 mmHg or higher (NICE clinic threshold). Bring your home readings and ask whether you are fit for a gradual exercise increase.',
             }]
           : []),
         ...aerobic([2, 4, 6, 7], 20, 30, 'Easy walk or cycle'),

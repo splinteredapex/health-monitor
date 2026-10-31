@@ -5,7 +5,9 @@ export async function onboard(page: Page) {
   await expect(page.getByRole('heading', { name: 'Before you start' })).toBeVisible();
   await page.getByLabel(/I understand this app/).check();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByLabel('Date of birth (optional)').fill('1987-05-01');
+  await page.getByLabel('Date of birth (optional)').fill('1990-05-01');
+  await page.getByRole('textbox', { name: 'Height' }).fill('178');
+  await page.getByRole('textbox', { name: 'Baseline weight' }).fill('80');
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('button', { name: 'Start my programme' }).click();

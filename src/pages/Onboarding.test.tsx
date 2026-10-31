@@ -23,7 +23,8 @@ describe('Onboarding', () => {
     expect(height).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByText('Height must be 100–250 cm.')).toBeInTheDocument();
     await user.clear(height);
-    await user.type(height, '185.4');
+    await user.type(height, '178');
+    await user.type(screen.getByLabelText('Baseline weight'), '80');
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     await user.click(screen.getByRole('button', { name: 'Start my programme' }));
